@@ -1,4 +1,4 @@
-package clause
+package ddl
 
 /*
 * @author: Chen Chiheng

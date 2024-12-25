@@ -1,4 +1,4 @@
-package constraint
+package constraints
 
 /*
 * @author: Chen Chiheng

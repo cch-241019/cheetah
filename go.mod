@@ -1,3 +1,3 @@
 module cheetah
 
-go
+go 1.23
