@@ -1,8 +1,9 @@
 package schema
 
 import (
-	"cheetah/internal/constraint"
-	"cheetah/internal/object"
+	"cheetah/internal/statement"
+	"cheetah/internal/statement/constraint"
+	"cheetah/internal/statement/object"
 )
 
 type Table struct {
@@ -10,7 +11,7 @@ type Table struct {
 	Engine     string
 	Comment    string
 	Collation  string
-	Columns    []Column
+	Columns    []statement.Column
 	PrimaryKey constraint.PrimaryKey
 	Indexes    []object.Index
 }
