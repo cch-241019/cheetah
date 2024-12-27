@@ -1,6 +1,6 @@
 package builder
 
-type StmtBuilder interface {
+type Builder interface {
 	WriteString(string)
 	WriteRune(rune)
 	WriteByte(byte)
@@ -8,6 +8,14 @@ type StmtBuilder interface {
 	String() string
 }
 
+type StmtBuilder interface {
+	Builder
+}
+
 type ClauseBuilder interface {
-	StmtBuilder
+	Builder
+}
+
+type Clause interface {
+	Build(ClauseBuilder)
 }
