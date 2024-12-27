@@ -11,10 +11,17 @@ type Config struct {
 	Port     int    `json:"port" yaml:"port"`
 	User     string `json:"user" yaml:"user"`
 	Password string `json:"password" yaml:"password"`
+	DBName   string `json:"db" yaml:"db"`
 }
 
 func Create(config *Config) (*sql.DB, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/parseTime=true", config.User, config.Password, config.Host, config.Port)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=true&loc=Local",
+		config.User,
+		config.Password,
+		config.Host,
+		config.Port,
+		config.DBName,
+	)
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, err

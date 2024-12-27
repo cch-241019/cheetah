@@ -3,6 +3,7 @@ package object
 import (
 	"cheetah/internal/statement/builder"
 	"cheetah/internal/statement/constraint"
+	"database/sql"
 )
 
 type TableType int
@@ -18,6 +19,8 @@ const (
 type Table struct {
 	// Name 表名
 	Name string
+	// AutoIncrement 自增值
+	AutoIncrement sql.NullInt32
 	// Columns 列
 	Columns []Column
 	// PrimaryKey 主键
@@ -31,6 +34,8 @@ type Table struct {
 	Engine string
 	// Comment 注释
 	Comment string
+	// Collation 编码
+	Collation string
 }
 
 func (tbl Table) BuildStmt(builder builder.StmtBuilder) {
