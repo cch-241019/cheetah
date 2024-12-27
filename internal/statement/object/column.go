@@ -1,4 +1,4 @@
-package statement
+package object
 
 /*
 * @author: Chen Chiheng

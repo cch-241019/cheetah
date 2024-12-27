@@ -1,100 +1,79 @@
 package object
 
-import (
-	"cheetah/internal/builder"
-	"cheetah/internal/statement"
-)
+import "cheetah/internal/statement/builder"
+
+// https://dev.mysql.com/doc/refman/8.4/en/information-schema-statistics-table.html
 
 type IndexType int
 
 const (
-	BTree IndexType = iota
-	Hash
-	Fulltext
-	Spatial
-	GIN
+	BTreeIndex IndexType = iota
+	FulltextIndex
+	HashIndex
+	RTreeIndex
 )
 
+type AlgorithmType int
+
+const (
+	DefalutAlgorithm AlgorithmType = iota
+	InplaceAlgorithm
+	CopyAlgorithm
+)
+
+type LockType int
+
+const (
+	DefaultLock LockType = iota
+	NoneLock
+	SharedLock
+	ExclusiveLock
+)
+
+type IndexColumn struct {
+	Name string
+	// SubPart 索引前缀
+	// 整个列都被索引为"",部分被索引则为
+	// 索引字符数
+	SubPart int
+	// Expression 表达式
+	Expression string
+}
+
 type Index struct {
-	Name    string
-	Type    IndexType
-	Columns []statement.Column
+	// Table 表名称
+	Table string
+	// Name 索引名称，若索引为主键
+	// 元数据表中为PRIMARY
+	Name string
+	// Unique 索引能否包含重复项
+	Unique bool
+	// Columns 索引作用的列
+	Columns []IndexColumn
+	// Type 索引类型
+	Type IndexType
+	// 索引注释
+	Comment string
+	// Visible 索引是否对优化器可见
+	Visible bool
+	// KeyBlockSize 指定索引页的大小
+	KeyBlockSize  int
+	LockType      LockType
+	AlgorithmType AlgorithmType
+	// WithParser 指定 Fulltext使用的解析器
+	WithParser string
+	// EngineAttribute
+	EngineAttribute string
+	// SecondaryEngineAttribute
+	SecondaryEngineAttribute string
 }
 
-func (idx Index) Build(builder builder.Builder) {
-	switch idx.Type {
-	case BTree:
-		idx.buildBTree(builder)
-	case Hash:
-		idx.buildHash(builder)
-	case Fulltext:
-		idx.buildFulltext(builder)
-	case Spatial:
-		idx.buildSpatial(builder)
-	case GIN:
-		idx.buildGIN(builder)
-	}
+// https://dev.mysql.com/doc/refman/8.4/en/create-index.html
+
+func (idx Index) BuildStmt(builder builder.StmtBuilder) {
+
 }
 
-func (idx Index) buildBTree(builder builder.Builder) {
-	builder.WriteString("INDEX ")
-	if idx.Name != "" {
-		builder.WriteQuoteTo(idx.Name)
-	}
-	builder.WriteString(" (")
-	for i, column := range idx.Columns {
-		builder.WriteQuoteTo(column.Name)
-		if i != len(idx.Columns)-1 {
-			builder.WriteByte(',')
-		}
-	}
-	builder.WriteByte(')')
-}
-
-func (idx Index) buildFulltext(builder builder.Builder) {
-	builder.WriteString("FULLTEXT INDEX ")
-	if idx.Name != "" {
-		builder.WriteQuoteTo(idx.Name)
-	}
-	builder.WriteString(" (")
-	for i, column := range idx.Columns {
-		builder.WriteQuoteTo(column.Name)
-		if i != len(idx.Columns)-1 {
-			builder.WriteByte(',')
-		}
-	}
-	builder.WriteByte(')')
-}
-
-func (idx Index) buildHash(builder builder.Builder) {
-	builder.WriteString("INDEX ")
-	if idx.Name != "" {
-		builder.WriteQuoteTo(idx.Name)
-	}
-	builder.WriteString(" USING HASH (")
-	for i, column := range idx.Columns {
-		builder.WriteQuoteTo(column.Name)
-		if i != len(idx.Columns)-1 {
-			builder.WriteByte(',')
-		}
-	}
-}
-
-func (idx Index) buildSpatial(builder builder.Builder) {
-	builder.WriteString("SPATIAL INDEX ")
-	if idx.Name != "" {
-		builder.WriteQuoteTo(idx.Name)
-	}
-	builder.WriteString(" (")
-	for i, column := range idx.Columns {
-		builder.WriteQuoteTo(column.Name)
-		if i != len(idx.Columns)-1 {
-			builder.WriteByte(',')
-		}
-	}
-	builder.WriteByte(')')
-}
-
-func (idx Index) buildGIN(builder builder.Builder) {
+func (idx Index) BuildClause(builder builder.ClauseBuilder) {
 
 }

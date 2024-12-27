@@ -1,0 +1,14 @@
+create: index
+indexType: unique
+indexName: index_name
+table: test_create_index
+columns:
+  - name:
+    subPart:
+    expression:
+    order:
+keyBlockSize: 15
+
+
+
+

@@ -1,6 +1,8 @@
 package change_log
 
-import "time"
+import (
+	"time"
+)
 
 type ChangeUnit struct {
 	id            int
