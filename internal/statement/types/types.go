@@ -21,7 +21,7 @@ type DataType interface {
 
 var dataTypes = map[string]DataType{
 	"INT":     &Int{},
-	"VARCHAR": Varchar{},
+	"VARCHAR": &Varchar{},
 }
 
 // Numeric 数值类型

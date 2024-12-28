@@ -1,6 +1,9 @@
 package constraint
 
-import "cheetah/internal/statement/builder"
+import (
+	"cheetah/internal/statement/builder"
+	"errors"
+)
 
 /*
 * @author: Chen Chiheng
@@ -17,9 +20,9 @@ type PrimaryKey struct {
 	Columns []string
 }
 
-func (pk PrimaryKey) Build(builder builder.Builder) {
+func (pk PrimaryKey) Build(builder builder.Builder) error {
 	if len(pk.Columns) < 1 {
-		return
+		return errors.New("no primary key columns")
 	}
 	builder.WriteString("PRIMARY KEY (")
 	for i, column := range pk.Columns {
@@ -29,4 +32,5 @@ func (pk PrimaryKey) Build(builder builder.Builder) {
 		}
 	}
 	builder.WriteByte(')')
+	return nil
 }

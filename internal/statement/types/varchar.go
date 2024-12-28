@@ -2,7 +2,6 @@ package types
 
 import (
 	"cheetah/internal/statement/builder"
-	"database/sql"
 )
 
 /*
@@ -16,8 +15,6 @@ type Varchar struct {
 	Characterset string
 	// Collate 排序顺序
 	Collate string
-	// Default 默认值
-	Default sql.NullString
 	// Fullname 类型全名
 	Fullname string
 }
@@ -35,10 +32,6 @@ func (v *Varchar) Build(builder builder.Builder) error {
 	if v.Collate != "" {
 		builder.WriteString(" COLLATE ")
 		builder.WriteString(v.Collate)
-	}
-	if v.Default.Valid {
-		builder.WriteString(" DEFAULT ")
-		builder.WriteString(v.Default.String)
 	}
 	return nil
 }

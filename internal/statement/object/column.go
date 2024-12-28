@@ -3,6 +3,7 @@ package object
 import (
 	"cheetah/internal/statement/builder"
 	"cheetah/internal/statement/types"
+	"database/sql"
 	"strings"
 )
 
@@ -21,8 +22,14 @@ type Column struct {
 	DataType string
 	// ColumnType 完整数据类型
 	ColumnType string
+	// Characterset 字符编码
+	Characterset string
+	// Collate 排序顺序
+	Collate string
 	// Nullable 能否为NUll
-	Nullable bool
+	// ColumnDefault 	默认值
+	ColumnDefault sql.NullString
+	Nullable      bool
 	// Visible 可见性
 	Visible bool
 	// AutoIncrement 自增
@@ -56,6 +63,35 @@ func (col Column) Build(builder builder.Builder) error {
 	err = dataType.Build(builder)
 	if err != nil {
 		return err
+	}
+	if col.Characterset != "" {
+		builder.WriteString(" CHARACTER SET ")
+		builder.WriteString(col.Characterset)
+	}
+	if col.Collate != "" {
+		builder.WriteString(" COLLATE ")
+		builder.WriteString(col.Collate)
+	}
+	if col.Nullable {
+		builder.WriteString(" NULL")
+	} else {
+		builder.WriteString(" NOT NULL")
+	}
+	if col.ColumnDefault.Valid && col.ColumnDefault.String != "NULL" {
+		builder.WriteString(" DEFAULT ")
+		builder.WriteString(col.ColumnDefault.String)
+	}
+	if !col.Visible {
+		builder.WriteString(" INVISIBLE")
+	}
+	if col.AutoIncrement {
+		builder.WriteString(" AUTO_INCREMENT")
+	}
+	if col.Comment != "" {
+		builder.WriteString(" COMMENT ")
+		builder.WriteByte('\'')
+		builder.WriteString(col.Comment)
+		builder.WriteByte('\'')
 	}
 	return nil
 }

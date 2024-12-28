@@ -1,18 +1,16 @@
 package types
 
 import (
-	"database/sql"
 	"strings"
 	"testing"
 )
 
-const testIntClause1 = "INT(10) UNSIGNED DEFAULT '10'"
+const testIntClause1 = "INT(10) UNSIGNED"
 
 func TestInt(t *testing.T) {
 	typ := Int{
 		Fullname: "INT(10)",
 		Numeric:  Numeric{Unsigned: true},
-		Default:  sql.NullInt32{Int32: 10, Valid: true},
 	}
 	builder := testBuilder{
 		&strings.Builder{},

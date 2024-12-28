@@ -38,25 +38,39 @@ type Table struct {
 	Collation string
 }
 
-func (tbl Table) Build(builder builder.Builder) {
+func (tbl *Table) Build(builder builder.Builder) error {
 	builder.WriteString("CREATE TABLE ")
-	builder.WriteQuoteTo(tbl.Name + " ")
+	builder.WriteQuoteTo(tbl.Name)
 	builder.WriteByte('(')
-	if tbl.Columns != nil {
-		for _, column := range tbl.Columns {
+	builder.WriteByte('\n')
+
+	if tbl.Columns != nil && len(tbl.Columns) > 0 {
+		for i, column := range tbl.Columns {
 			if column.PrimaryKey {
 				tbl.PrimaryKey.Columns = append(tbl.PrimaryKey.Columns, column.Name)
 			}
-			column.Build(builder)
+			err := column.Build(builder)
+			if err != nil {
+				return err
+			}
+			if i < len(tbl.Columns)-1 {
+				builder.WriteString(",\n")
+			}
 		}
 	}
-	tbl.PrimaryKey.Build(builder)
+	if len(tbl.PrimaryKey.Columns) > 0 {
+		builder.WriteString(",\n")
+		err := tbl.PrimaryKey.Build(builder)
+		if err != nil {
+			return err
+		}
+	}
 	if tbl.Indexes != nil {
 		for _, index := range tbl.Indexes {
 			index.Build(builder)
 		}
 	}
-	builder.WriteByte(')')
+	builder.WriteString("\n)")
 	if tbl.Engine != "" {
 		builder.WriteString(" ENGINE=")
 		builder.WriteString(tbl.Engine)
@@ -69,4 +83,5 @@ func (tbl Table) Build(builder builder.Builder) {
 		builder.WriteString(" AUTO_INCREMENT=")
 		builder.WriteString(string(tbl.AutoIncrement.Int32))
 	}
+	return nil
 }
