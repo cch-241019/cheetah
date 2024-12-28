@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"database/sql"
@@ -11,7 +11,7 @@ type Config struct {
 	Port     int    `json:"port" yaml:"port"`
 	User     string `json:"user" yaml:"user"`
 	Password string `json:"password" yaml:"password"`
-	DBName   string `json:"db" yaml:"db"`
+	DBName   string `json:"database" yaml:"database"`
 }
 
 func Create(config *Config) (*sql.DB, error) {

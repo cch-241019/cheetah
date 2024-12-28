@@ -70,10 +70,10 @@ type Index struct {
 
 // https://dev.mysql.com/doc/refman/8.4/en/create-index.html
 
-func (idx Index) BuildStmt(builder builder.StmtBuilder) {
+func (idx Index) BuildStmt(builder builder.Builder) {
 
 }
 
-func (idx Index) BuildClause(builder builder.ClauseBuilder) {
+func (idx Index) Build(builder builder.Builder) {
 
 }

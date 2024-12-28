@@ -1,7 +1,7 @@
 package reverse
 
 import (
-	"cheetah/internal/db"
+	"cheetah/internal/database"
 	"database/sql"
 	"testing"
 )
@@ -16,7 +16,7 @@ var testDB *sql.DB
 
 func setupDB(t *testing.T) {
 	var err error
-	testDB, err = db.Create(&db.Config{
+	testDB, err = database.Create(&database.Config{
 		Host:     "127.0.0.1",
 		Port:     3306,
 		User:     "root",
@@ -38,7 +38,7 @@ const (
 
 func TestRevCreateTable(t *testing.T) {
 	setupDB(t)
-	table, err := RevCreateTable(testDB, testSchemaName, testTableName)
+	table, err := RevCreateTableStmt(testDB, testSchemaName, testTableName)
 	if err != nil {
 		t.Error(err)
 	}

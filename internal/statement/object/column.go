@@ -42,29 +42,16 @@ func (col Column) Build(builder builder.ClauseBuilder) {
 	}
 }
 
+// ColumnMeta 列元数据
 type ColumnMeta struct {
-	Catalog   string
-	Schema    string
-	TableName string
-	Name      string
-	Position  int
-	Default   string
-	Nullable  bool
-	Type      string
-	// MaximumLength 最大长度
-	MaximumLength int
-	// OctetLength 最大字节长度
-	OctetLength       int
-	NumericPrecision  int
-	NumericScale      int
-	DateTimePrecision int
-	CharacterSet      string
-	Collation         string
-	ColumnType        string
-	ColumnKey         string
-	Extra             string
-	Privileges        string
-	Comment           string
-	GenerationExpr    string
-	SrsID             int
+	// DataType 数据类型
+	DataType string
+	// CollationName 对于字符串列，为排序规则
+	CollationName string
+	// ColumnKey empty, PRI, UNI, MUL
+	ColumnKey string
+}
+
+func ColumnMeta2Column(meta *ColumnMeta, column *Column) error {
+	return nil
 }

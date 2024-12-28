@@ -17,7 +17,10 @@ type PrimaryKey struct {
 	Columns []string
 }
 
-func (pk PrimaryKey) BuildClause(builder builder.ClauseBuilder) {
+func (pk PrimaryKey) Build(builder builder.Builder) {
+	if len(pk.Columns) < 1 {
+		return
+	}
 	builder.WriteString("PRIMARY KEY (")
 	for i, column := range pk.Columns {
 		builder.WriteQuoteTo(column)

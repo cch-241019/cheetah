@@ -38,8 +38,35 @@ type Table struct {
 	Collation string
 }
 
-func (tbl Table) BuildStmt(builder builder.StmtBuilder) {
+func (tbl Table) Build(builder builder.Builder) {
 	builder.WriteString("CREATE TABLE ")
 	builder.WriteQuoteTo(tbl.Name + " ")
 	builder.WriteByte('(')
+	if tbl.Columns != nil {
+		for _, column := range tbl.Columns {
+			if column.PrimaryKey {
+				tbl.PrimaryKey.Columns = append(tbl.PrimaryKey.Columns, column.Name)
+			}
+			column.Build(builder)
+		}
+	}
+	tbl.PrimaryKey.Build(builder)
+	if tbl.Indexes != nil {
+		for _, index := range tbl.Indexes {
+			index.Build(builder)
+		}
+	}
+	builder.WriteByte(')')
+	if tbl.Engine != "" {
+		builder.WriteString(" ENGINE=")
+		builder.WriteString(tbl.Engine)
+	}
+	if tbl.Collation != "" {
+		builder.WriteString(" DEFAULT CHARSET=")
+		builder.WriteString(tbl.Collation)
+	}
+	if tbl.AutoIncrement.Int32 != 0 {
+		builder.WriteString(" AUTO_INCREMENT=")
+		builder.WriteString(string(tbl.AutoIncrement.Int32))
+	}
 }
