@@ -17,5 +17,5 @@ type ClauseBuilder interface {
 }
 
 type Clause interface {
-	Build(ClauseBuilder)
+	Build(Builder) error
 }

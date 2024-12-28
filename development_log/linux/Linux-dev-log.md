@@ -26,3 +26,14 @@ chmod u+rwx,g+rw,o=r file.txt
 ```shell
 sudo chown user2:group2 data.txt
 ```
+
+##### 文件夹下的内容查询
+
+```shell
+find . -type f -exec grep "example" {} +
+```
+
+##### GNU findutils命令工具
+
+[GNU Findutils](https://www.gnu.org/software/findutils/manual/html_mono/find.html)
+

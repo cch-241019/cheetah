@@ -36,7 +36,7 @@ const (
 	testTableName  = "test_create_table"
 )
 
-func TestRevCreateTable(t *testing.T) {
+func TestRevCreateTableStmt(t *testing.T) {
 	setupDB(t)
 	table, err := RevCreateTableStmt(testDB, testSchemaName, testTableName)
 	if err != nil {
